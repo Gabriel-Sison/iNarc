@@ -50,22 +50,24 @@ export class Calculator extends Component<CalculatorProps, CalculatorState> {
             <div>
                 <h2>Summary: </h2>
                     <table>
-                        <tr>
-                            <th>----Total Cost---</th>
-                            <th>----Daily Cost---</th>
-                            <th>----Total LBS----</th>
-                            <th>----Daily LBS----</th>
-                            <th>----Total Surplus----</th>
-                            <th>----Daily Surplus----</th>
-                        </tr>
-                        <tr>
-                            <th>{absMoney(round(totalCost, 2))}</th>
-                            <th>{dailyCost}</th>
-                            <th>{round(totalLbs, 2)} LBS</th>
-                            <th>{round(totalLbs / this.state.days, 2)} LBS</th>
-                            <th>{totalSurplus}</th>
-                            <th>{daillySurplus}</th>
-                        </tr>
+                        <tbody>
+                            <tr>
+                                <th>----Total Cost---</th>
+                                <th>----Daily Cost---</th>
+                                <th>----Total LBS----</th>
+                                <th>----Daily LBS----</th>
+                                <th>----Total Surplus----</th>
+                                <th>----Daily Surplus----</th>
+                            </tr>
+                            <tr>
+                                <th>{absMoney(round(totalCost, 2))}</th>
+                                <th>{dailyCost}</th>
+                                <th>{round(totalLbs, 2)} LBS</th>
+                                <th>{round(totalLbs / this.state.days, 2)} LBS</th>
+                                <th>{totalSurplus}</th>
+                                <th>{daillySurplus}</th>
+                            </tr>
+                        </tbody>
                     </table>
             </div>
         )
@@ -91,12 +93,14 @@ export class Calculator extends Component<CalculatorProps, CalculatorState> {
         for (const currFood of this.props.foods) {
             if (currFood.list === "Calculator") {
                 foods.push(
-                    <tr>
+                    <tr key={currFood.name}>
                         {/** Delete item */}
                         <td><a href="#" onClick={(evt) => this.doDeleteClick(evt, currFood)}>X</a></td>
 
                         {/** Change input */}
-                        <input type="number" id={currFood.name + " Input"} defaultValue={currFood.bought} name="input" min="0" max="1000" onChange={() => this.doBoughtChange(currFood)}/>
+                        <td>
+                            <input type="number" id={currFood.name + " Input"} defaultValue={currFood.bought} name="input" min="0" max="1000" onChange={() => this.doBoughtChange(currFood)}/>
+                        </td>
 
                         {/** Name */}
                         <td>{currFood.name}</td> 
@@ -126,16 +130,18 @@ export class Calculator extends Component<CalculatorProps, CalculatorState> {
                 <div>
                     <h2>Table of Foods</h2>
                     <table>
-                        <tr>
-                            <th></th>
-                            <th>Bought-</th>
-                            <th>Name-----------</th> 
-                            <th>Cost/lb---</th>
-                            <th>Weight----</th>
-                            <th>% Cost----</th>
-                            <th>Total LBS Bought---</th>
-                        </tr>
+                        <tbody>
+                            <tr>
+                                <th></th>
+                                <th>Bought-</th>
+                                <th>Name-----------</th> 
+                                <th>Cost/lb---</th>
+                                <th>Weight----</th>
+                                <th>% Cost----</th>
+                                <th>Total LBS Bought---</th>
+                            </tr>
                             {foods}
+                         </tbody>
                     </table>
                     <button type="button" onClick={this.doAddClick}>Add New Food</button>
                     <button type="button" onClick={this.doCheckPropsClick}>Check Props</button>

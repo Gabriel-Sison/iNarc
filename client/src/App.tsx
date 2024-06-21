@@ -21,10 +21,6 @@ export class App extends Component<{}, AppState> {
         listFoods(this.doListResp);
     }
 
-    componentDidUpdate = (): void => {
-        listFoods(this.doListResp);
-    }
-
     render = (): JSX.Element => {
         if (this.state.page === "Calculator") {
             return <Calculator  onDeleteClick={this.doDeleteClick} 
@@ -56,6 +52,7 @@ export class App extends Component<{}, AppState> {
 
     doAddClick = (food: Food): void => {
         saveFood(food)
+        listFoods(this.doListResp);
         this.setState({page: "Calculator"})
     }
 
