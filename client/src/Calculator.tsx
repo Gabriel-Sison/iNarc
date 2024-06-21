@@ -34,7 +34,7 @@ export class Calculator extends Component<CalculatorProps, CalculatorState> {
         return (
             <div>
                 <h1>Welcome to the food calculator!</h1>
-                {this.renderInput()}
+                {this.renderPersonalInfo()}
                 {this.renderFoods(totalCost)}
                 {this.renderSummary(totalCost, totalLbs)}
             </div>
@@ -71,7 +71,7 @@ export class Calculator extends Component<CalculatorProps, CalculatorState> {
         )
     }
 
-    renderInput = (): JSX.Element => {
+    renderPersonalInfo = (): JSX.Element => {
         return (
             <div>
                 <h2>Personal Information</h2>
@@ -85,6 +85,7 @@ export class Calculator extends Component<CalculatorProps, CalculatorState> {
         )
     }
 
+    // TODO: Add in "miscellanous" and separate current table into TABLE OF MEATS
     renderFoods = (totalCost: number): JSX.Element => {
         const foods: JSX.Element[] = [];
         for (const currFood of this.props.foods) {
