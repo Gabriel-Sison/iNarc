@@ -18,26 +18,6 @@ type Food = {
   readonly list: string
 }
 
-
-// GENERAL CHANGE METHOD
-let currDays: number = -1;
-export const updateDay = (req: SafeRequest, res: SafeResponse): void => {
-  const day = first(req.query.day)
-  if (typeof day !== "string") {
-    res.status(400).send("Day is not a string")
-    return;
-  }
-  const prev = currDays;
-  currDays = Number(day)
-  console.log("Changed day from " + prev + " to " + currDays)
-  res.send({saved: true})
-}
-
-export const getDay = (_req: SafeRequest, res: SafeResponse): void => {
-  res.send({day: currDays});
-}
-
-
 const map: Map<string, Food> = new Map();
 
 // GENERAL CHANGE METHOD
@@ -144,9 +124,21 @@ export const listFoods = (_req: SafeRequest, res: SafeResponse): void => {
     res.send({foodsArr: foods});
 }
 
+// let currDays: number = -1;
+// export const updateDay = (req: SafeRequest, res: SafeResponse): void => {
+//   const day = req.body.day
+//   if (typeof day !== "number") {
+//     res.status(400).send("Day is not a number")
+//     return;
+//   }
+//   currDays = Number(day)
+//   res.send({saved: true})
+// }
+// export const getDay = (_req: SafeRequest, res: SafeResponse): void => {
+//   res.send({day: currDays});
+// }
+
 // Helper to return the (first) value of the parameter if any was given.
-// (This is mildly annoying because the client can also give mutiple values,
-// in which case, express puts them into an array.)
 const first = (param: unknown): string|undefined => {
   if (Array.isArray(param)) {
     return first(param[0]);

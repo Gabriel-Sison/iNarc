@@ -41,7 +41,6 @@ export class NewFood extends Component<NewFoodProps, NewFoodState> {
 
                     <div>
                         <label htmlFor='Metric'>Metric: </label>
-                        <label htmlFor='Metric'>Metric: </label>
                         <select id="Metric" onChange={this.doMetricChange}>
                             <option value="lbs">lbs</option>
                             <option value="grams">grams</option>
@@ -49,12 +48,12 @@ export class NewFood extends Component<NewFoodProps, NewFoodState> {
                     </div> 
 
                     <div>
-                        <label htmlFor='Units Bought'>Metrics/ Serving: </label>
+                        <label htmlFor='Units Bought'>LBS in 1 serving: </label>
                         <input type="number" id="Units Bought" onChange={this.doUnitsBoughtChange}></input>
                     </div> 
 
                     <div>
-                        <label htmlFor='Cost'>Cost per Metric: $</label>
+                        <label htmlFor='Cost'>Cost per LB: $</label>
                         <input type="number" id="Cost" onChange={this.doCostChange}></input>
                     </div> 
 

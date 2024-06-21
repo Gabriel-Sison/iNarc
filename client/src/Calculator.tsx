@@ -5,49 +5,90 @@ type CalculatorProps = {
     onDeleteClick: (food: Food) => void,
     onAddClick: (food: Food) => void,
     onAddFoodPage: () => void,
-    onDayChange: (day: number) => void,
     foods: Food[]
 }
 
 type CalculatorState = {
     moneyGoal: number,
-    days: number
+    days: number,
+    budget: number
 }
 
 export class Calculator extends Component<CalculatorProps, CalculatorState> {
     constructor(props: CalculatorProps) {
         super(props);
-        this.state = {moneyGoal: 0, days: 1}
+        this.state = {moneyGoal: 0, days: 1, budget: 0}
     }
     
     render = (): JSX.Element => {
+        // Getting total cost and pounds
+        const currCosts: number[] = [];
+        const pounds: number[] = [];
+        for (const currFood of this.props.foods) {
+            currCosts.push(Math.round(currFood.bought * currFood.lbsBought * currFood.cost * 100)/ 100)
+            pounds.push(currFood.lbsBought * currFood.bought);
+        }
+        const totalCost: number = getTotalCost(currCosts, 0);
+        const totalLbs = getTotalLbs(pounds, 0);
+
         return (
             <div>
-                You're in the calculator
-                <div>
-                    Days: <input type="number" onChange={this.doDayChange} defaultValue={this.state.days}></input>
-                </div>
-                {this.renderFoods()}
+                <h1>Welcome to the food calculator!</h1>
+                {this.renderInput()}
+                {this.renderFoods(totalCost)}
+                {this.renderSummary(totalCost, totalLbs)}
             </div>
         )
     }
 
-    renderFoods = (): JSX.Element => {
-        // Getting total cost of food
-        const currCosts: number[] = [];
-        for (const currFood of this.props.foods) {
-            currCosts.push(Math.round(currFood.bought * currFood.lbsBought * currFood.cost / this.state.days * 100)/ 100)
-        }
-        const totalCost: number = getTotalCost(currCosts, 0);
+    renderSummary = (totalCost: number, totalLbs: number): JSX.Element => {
+        const dailyCost = absMoney(round(totalCost / this.state.days, 2))
+        const totalSurplus = absMoney(round(this.state.budget * this.state.days - totalCost, 2))
+        const daillySurplus = absMoney(round(this.state.budget - totalCost / this.state.days, 2))
 
-        const pounds: number[] = [];
+        return (
+            <div>
+                <h2>Summary: </h2>
+                    <table>
+                        <tr>
+                            <th>----Total Cost---</th>
+                            <th>----Daily Cost---</th>
+                            <th>----Total LBS----</th>
+                            <th>----Daily LBS----</th>
+                            <th>----Total Surplus----</th>
+                            <th>----Daily Surplus----</th>
+                        </tr>
+                        <tr>
+                            <th>{absMoney(round(totalCost, 2))}</th>
+                            <th>{dailyCost}</th>
+                            <th>{round(totalLbs, 2)} LBS</th>
+                            <th>{round(totalLbs / this.state.days, 2)} LBS</th>
+                            <th>{totalSurplus}</th>
+                            <th>{daillySurplus}</th>
+                        </tr>
+                    </table>
+            </div>
+        )
+    }
+
+    renderInput = (): JSX.Element => {
+        return (
+            <div>
+                <h2>Personal Information</h2>
+                    <div>
+                        Days planned out: <input type="number" onChange={this.doDayChange} defaultValue={this.state.days} min={1}></input>
+                    </div>
+                    <div>
+                        Daily Budget: <input type="number" onChange={this.doBudgetChange} defaultValue={this.state.budget} min={0}></input>
+                    </div>
+            </div>
+        )
+    }
+
+    renderFoods = (totalCost: number): JSX.Element => {
         const foods: JSX.Element[] = [];
         for (const currFood of this.props.foods) {
             if (currFood.list === "Calculator") {
-
-                // FIX LATER
-                let input: number = currFood.bought
-
                 foods.push(
                     <tr>
                         {/** Delete item */}
@@ -66,15 +107,15 @@ export class Calculator extends Component<CalculatorProps, CalculatorState> {
                         <td>{currFood.lbsBought} {currFood.metric}</td>
 
                         {/** % Cost */}
-                        <td>{Math.round(1000 * currFood.lbsBought * input * currFood.cost / this.state.days / totalCost) / 10}</td>
+                        <td>{Math.round(1000 * currFood.lbsBought * currFood.bought * currFood.cost / totalCost) / 10}</td>
+
+                        {/** Total pounds bought */}
+                        <td>{currFood.lbsBought * currFood.bought}</td>
                     </tr>
                 )
-                
-                pounds.push(currFood.lbsBought * currFood.bought);
             }
         }
 
-        const totalLbs = getTotalLbs(pounds, 0);
         if (foods.length === 0) {
             return (<>
                 <button type="button" onClick={this.doAddClick}>Add New Food</button>
@@ -82,6 +123,7 @@ export class Calculator extends Component<CalculatorProps, CalculatorState> {
         } else {
             return (
                 <div>
+                    <h2>Table of Foods</h2>
                     <table>
                         <tr>
                             <th></th>
@@ -90,32 +132,25 @@ export class Calculator extends Component<CalculatorProps, CalculatorState> {
                             <th>Cost/lb---</th>
                             <th>Weight----</th>
                             <th>% Cost----</th>
+                            <th>Total LBS Bought---</th>
                         </tr>
                             {foods}
                     </table>
                     <button type="button" onClick={this.doAddClick}>Add New Food</button>
                     <button type="button" onClick={this.doCheckPropsClick}>Check Props</button>
-
-                    <h2>Summary: </h2>
-                    <p>Average Daily Cost : {Math.round(totalCost * 100) / 100}</p>
-                    <p>Average LBS of Meat : {Math.round(totalLbs / this.state.days * 100) / 100} </p>
                 </div>
             )
         }
         
     }
 
-    doCheckPropsClick = (): void => {
-        console.log(this.props.foods)
-    }
-
     doAddClick = (): void => {
         this.props.onAddFoodPage();
     }
 
-    doDayChange = (evt: ChangeEvent<HTMLInputElement>): void => {
-        this.setState({days: Number(evt.target.value)})
-        this.props.onDayChange(Number(evt.target.value))
+    doDeleteClick = (evt: MouseEvent<HTMLAnchorElement>, currFood: Food): void => {
+        evt.preventDefault();
+        this.props.onDeleteClick(currFood);
     }
 
     doBoughtChange = (food: Food): void => {
@@ -123,9 +158,16 @@ export class Calculator extends Component<CalculatorProps, CalculatorState> {
         this.props.onAddClick({...food, bought: Number(newBought)})
     }
 
-    doDeleteClick = (evt: MouseEvent<HTMLAnchorElement>, currFood: Food): void => {
-        evt.preventDefault();
-        this.props.onDeleteClick(currFood);
+    doDayChange = (evt: ChangeEvent<HTMLInputElement>): void => {
+        this.setState({days: Number(evt.target.value)})
+    }
+
+    doBudgetChange = (evt: ChangeEvent<HTMLInputElement>): void => {
+        this.setState({budget: Number(evt.target.value)})
+    }
+
+    doCheckPropsClick = (): void => {
+        console.log(this.props.foods)
     }
 }
 
@@ -144,5 +186,17 @@ const getTotalLbs = (pounds: number[], idx: number): number => {
         return 0;
     } else {
         return currCost + getTotalCost(pounds, idx + 1);
+    }
+}
+
+const round = (number: number, places: number): number => {
+    return Math.round(number * 10 ** places) / 10 ** places;
+}
+
+const absMoney = (money: number): string => {
+    if (money < 0) {
+        return  "-$" + Math.abs(money)
+    } else {
+        return "$" + money
     }
 }

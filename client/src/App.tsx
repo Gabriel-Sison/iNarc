@@ -1,24 +1,24 @@
 import React, { Component } from "react";
 import { Food } from "./Food";
 import { Calculator } from "./Calculator";
-import { deleteFood, listFoods, saveFood, updateDay} from "./server";
+import { deleteFood, listFoods, saveFood} from "./server";
 import { NewFood } from "./NewFood";
 
 type Page = "Inventory" | "Calculator" | "New Food"
 type AppState = {
-    page: Page, foodList: Array<Food>, day: number
+    page: Page, foodList: Array<Food>
 }
 
 export class App extends Component<{}, AppState> {
     constructor(props: {}) {
         super(props);
         this.state = {
-            page: "Calculator", foodList: [], day: 0
+            page: "Calculator", foodList: []
         };
     }
 
     componentDidMount(): void {
-        listFoods(this.doListResp)
+        listFoods(this.doListResp);
     }
 
     componentDidUpdate = (): void => {
@@ -30,7 +30,6 @@ export class App extends Component<{}, AppState> {
             return <Calculator  onDeleteClick={this.doDeleteClick} 
                                 onAddClick={this.doAddClick} 
                                 foods={this.state.foodList}
-                                onDayChange={this.doDayChange}
                                 onAddFoodPage={this.doAddFoodPageChange}/>
         } else if (this.state.page === "Inventory") {
             return <div>Trying to go to inventory</div>
@@ -39,9 +38,13 @@ export class App extends Component<{}, AppState> {
         }
     };
 
-    doDayChange = (day: number): void => {
-        updateDay(day)
-    }
+    // doDayChange = (day: number): void => {
+    //     updateDay(day)
+    // }
+
+    // doGetDayResp = (day: number): void => {
+    //     this.setState({day: day})
+    // }
 
     doAddFoodPageChange = (): void => {
         this.setState({page: "New Food"});

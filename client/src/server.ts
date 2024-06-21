@@ -8,7 +8,6 @@ export const listFoods = (cb: ListCallback): void => {
     .then((res) => doListResp(res, cb))
     .catch(() => doError("failed to connect to server", "list"));
 };
-
 const doListResp = (res: Response, cb: ListCallback): void => {
   if (res.status === 200) {
       res.json().then((res) => doListJson(res, cb))
@@ -20,21 +19,45 @@ const doListResp = (res: Response, cb: ListCallback): void => {
       doError(`bad status code: ${res.status}`, "list");
   }
 };
-
 const doListJson = (res: unknown, cb: ListCallback): void => {
   if (!isRecord(res) || !Array.isArray(res.foodsArr)) {
     console.error('Invalid JSON from /api/list', res);
     return;
   }
-
   cb(res.foodsArr);
 };
 
+// -------------------------- RECIEVING DAY -------------------------- //
+export type GetDayCallback = (day: number) => void;
+export const getDay = (cb: GetDayCallback): void => {
+  fetch("/api/getDay")
+    .then((res) => doDayResp(res, cb))
+    .catch(() => doError("failed to connect to server", "getDay"));
+};
 
+const doDayResp = (res: Response, cb: GetDayCallback): void => {
+  if (res.status === 200) {
+      res.json().then((res) => doGetDayJson(res, cb))
+      .catch(() => doError("200 response is not JSON", "getDay"));
+  } else if (res.status === 400) {
+      res.text().then(doGeneralError)
+      .catch(() => doError("400 response is not text", "getDay"));
+  } else {
+      doError(`bad status code: ${res.status}`, "getDay");
+  }
+};
+
+const doGetDayJson = (res: unknown, cb: GetDayCallback): void => {
+  if (!isRecord(res) || typeof res.day !== "number") {
+    console.error('Invalid JSON from /api/getDay', res);
+    return;
+  }
+  cb(res.day);
+};
 
 // -------------------------- CHANGING DATE: GC -------------------------- //
 export const updateDay = (day: number): void => {
-  fetch("/api/updateDay?day=" +  encodeURIComponent(day))
+  fetch("/api/updateDay", {method: 'POST', body: JSON.stringify({day: day}), headers: {'Content-Type': 'application/json'}})
     .then((res) => doGeneralResp(res, "updateDay"))
     .catch(() => doError("failed to connect to server", "updateDay"));
 }
