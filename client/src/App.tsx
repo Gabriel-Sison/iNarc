@@ -18,11 +18,7 @@ export class App extends Component<{}, AppState> {
     }
 
     componentDidMount(): void {
-        listFoods(this.doListResp);
-    }
-
-    componentDidUpdate = (): void => {
-        listFoods(this.doListResp);
+        this.doGetList();
     }
 
     render = (): JSX.Element => {
@@ -38,13 +34,9 @@ export class App extends Component<{}, AppState> {
         }
     };
 
-    // doDayChange = (day: number): void => {
-    //     updateDay(day)
-    // }
-
-    // doGetDayResp = (day: number): void => {
-    //     this.setState({day: day})
-    // }
+    doGetList = (): void => {
+        listFoods(this.doListResp)
+    }
 
     doAddFoodPageChange = (): void => {
         this.setState({page: "New Food"});
@@ -56,10 +48,19 @@ export class App extends Component<{}, AppState> {
 
     doAddClick = (food: Food): void => {
         saveFood(food)
+        this.doGetList()
         this.setState({page: "Calculator"})
     }
 
     doDeleteClick = (food: Food): void => {
         deleteFood(food)
     }
+
+    // doDayChange = (day: number): void => {
+    //     updateDay(day)
+    // }
+
+    // doGetDayResp = (day: number): void => {
+    //     this.setState({day: day})
+    // }
 }
