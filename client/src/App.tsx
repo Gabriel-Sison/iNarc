@@ -10,6 +10,7 @@ type AppState = {
 }
 
 export class App extends Component<{}, AppState> {
+    // BASIC EDIT
     constructor(props: {}) {
         super(props);
         this.state = {
