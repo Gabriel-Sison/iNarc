@@ -1,3 +1,17 @@
+/**
+ * HOW TO SEND TO GITHUB
+ * 
+ * Go to my branch
+ * git add .
+ * git commit -m "message"
+ * git push origin myBranch
+ * 
+ * Go to main branch
+ * git pull origin main
+ * git merge myBranch
+ * git push origin main
+ */
+
 import React, { Component } from "react";
 import { Food } from "./Food";
 import { Calculator } from "./Calculator";
