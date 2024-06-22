@@ -1,5 +1,5 @@
 import express, { Express } from "express";
-import { addFood, listFoods, deleteFood, updateDay, getDay} from './routes';
+import { addFood, listFoods, deleteFood, updateDay, getDay, updateBudget, getBudget} from './routes';
 import bodyParser from 'body-parser';
 
 // Configure and start the HTTP server.
@@ -9,6 +9,8 @@ app.use(bodyParser.json());
 app.post("/api/add", addFood)
 app.post("/api/delete", deleteFood)
 app.post("/api/updateDay", updateDay)
+app.post("/api/updateBudget", updateBudget)
 app.get("/api/getDay", getDay)
+app.get("/api/getBudget", getBudget)
 app.get("/api/list", listFoods)
 app.listen(port, () => console.log(`Server listening on ${port}`));

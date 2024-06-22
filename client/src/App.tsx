@@ -1,12 +1,12 @@
 import React, { Component } from "react";
 import { Food } from "./Food";
 import { Calculator } from "./Calculator";
-import { deleteFood, listFoods, saveFood, getDay, updateDay} from "./server";
+import { deleteFood, listFoods, saveFood, getDay, updateDay, updateBudget, getBudget} from "./server";
 import { NewFood } from "./NewFood";
 
 type Page = "Inventory" | "Calculator" | "New Food"
 type AppState = {
-    page: Page, foodList: Array<Food>, day: number
+    page: Page, foodList: Array<Food>, day: number, budget: number
 }
 
 export class App extends Component<{}, AppState> {
@@ -14,13 +14,14 @@ export class App extends Component<{}, AppState> {
     constructor(props: {}) {
         super(props);
         this.state = {
-            page: "Calculator", foodList: [], day: 0
+            page: "Calculator", foodList: [], day: 0, budget: 0
         };
     }
 
     componentDidMount(): void {
         listFoods(this.doListResp)
         getDay(this.doGetDayResp)
+        getBudget(this.doGetBudgetResp)
     }
 
     render = (): JSX.Element => {
@@ -30,6 +31,8 @@ export class App extends Component<{}, AppState> {
                                 foods={this.state.foodList}
                                 day={this.state.day}
                                 onDayChange={this.doDayChange}
+                                budget={this.state.budget}
+                                onBudgetChange={this.doBudgetChange}
                                 onAddFoodPage={this.doAddFoodPageChange}/>
         } else if (this.state.page === "Inventory") {
             return <div>Trying to go to inventory</div>
@@ -64,5 +67,14 @@ export class App extends Component<{}, AppState> {
 
     doGetDayResp = (serverDay: number): void => {
         this.setState({day: serverDay})
+    }
+
+    doBudgetChange = (budget: number): void => {
+        updateBudget(budget)
+        this.setState({budget: budget})
+    }
+
+    doGetBudgetResp = (serverBudget: number): void => {
+        this.setState({budget: serverBudget})
     }
 }

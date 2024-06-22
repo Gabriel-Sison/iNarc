@@ -55,6 +55,41 @@ const doGetDayJson = (res: unknown, cb: GetDayCallback): void => {
   cb(res.day);
 };
 
+// -------------------------- RECIEVING BUDGET -------------------------- //
+export type GetBudgetCallback = (budget: number) => void;
+export const getBudget = (cb: GetBudgetCallback): void => {
+  fetch("/api/getBudget")
+    .then((res) => doBudgetResp(res, cb))
+    .catch(() => doError("failed to connect to server", "getBudget"));
+};
+
+const doBudgetResp = (res: Response, cb: GetBudgetCallback): void => {
+  if (res.status === 200) {
+      res.json().then((res) => doGetBudgetJson(res, cb))
+      .catch(() => doError("200 response is not JSON", "getBudget"));
+  } else if (res.status === 400) {
+      res.text().then(doGeneralError)
+      .catch(() => doError("400 response is not text", "getBudget"));
+  } else {
+      doError(`bad status code: ${res.status}`, "getBudget");
+  }
+};
+
+const doGetBudgetJson = (res: unknown, cb: GetBudgetCallback): void => {
+  if (!isRecord(res) || typeof res.budget !== "number") {
+    console.error('Invalid JSON from /api/getBudget', res);
+    return;
+  }
+  cb(res.budget);
+};
+
+// -------------------------- CHANGING BUDGET: GC -------------------------- //
+export const updateBudget = (budget: number): void => {
+  fetch("/api/updateBudget", {method: 'POST', body: JSON.stringify({budget: budget}), headers: {'Content-Type': 'application/json'}})
+    .then((res) => doGeneralResp(res, "updateBudget"))
+    .catch(() => doError("failed to connect to server", "updateBudget"));
+}
+
 // -------------------------- CHANGING DATE: GC -------------------------- //
 export const updateDay = (day: number): void => {
   fetch("/api/updateDay", {method: 'POST', body: JSON.stringify({day: day}), headers: {'Content-Type': 'application/json'}})

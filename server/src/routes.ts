@@ -19,18 +19,6 @@ type Food = {
 }
 
 const map: Map<string, Food> = new Map();
-// map.set("Beef Skirt", {
-//     name: "Beef Skirt",
-//     metric: "LB",
-//     cost: 4.79,
-//     servings: 1,
-//     lbsBought: 2,
-//     fats: 1,
-//     carbs: 1,
-//     proteins: 1,
-//     bought: 1,
-//     list: "Calculator"
-// })
 
 // GENERAL CHANGE METHOD
 export const deleteFood = (req: SafeRequest, res: SafeResponse): void => { 
@@ -124,11 +112,9 @@ export const addFood = (req: SafeRequest, res: SafeResponse): void => {
 }
 
 export const listFoods = (_req: SafeRequest, res: SafeResponse): void => {
-    // TODO: Sort this by param
-    const names: string[] = Array.from(map.keys()).sort((a, b) => (map.get(b) as Food).cost - (map.get(a) as Food).cost);
+    const names: string[] = Array.from(map.keys());
     let i = 0;
     const foods: unknown[] = [];
-    // Inv: IDK
     while (i < names.length) {
       foods.push(map.get(names[i]))
       i = i + 1;
@@ -149,6 +135,21 @@ export const updateDay = (req: SafeRequest, res: SafeResponse): void => {
 
 export const getDay = (_req: SafeRequest, res: SafeResponse): void => {
   res.send({day: currDays});
+}
+
+let currBudget: number = 0;
+export const updateBudget = (req: SafeRequest, res: SafeResponse): void => {
+  const budget = req.body.budget
+  if (typeof budget !== "number") {
+    res.status(400).send("budget is not a number")
+    return;
+  }
+  currBudget = Number(budget)
+  res.send({saved: true})
+}
+
+export const getBudget = (_req: SafeRequest, res: SafeResponse): void => {
+  res.send({budget: currBudget});
 }
 
 // Helper to return the (first) value of the parameter if any was given.
