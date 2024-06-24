@@ -4,7 +4,7 @@ import { Food } from './Food';
 type CalculatorProps = {
     onDeleteClick: (food: Food) => void,
     onAddClick: (food: Food) => void,
-    onAddFoodPage: () => void,
+    onAddMeatPage: () => void,
     onDayChange: (day: number) => void,
     onBudgetChange: (budget: number) => void,
     budget: number,
@@ -16,13 +16,15 @@ type CalculatorState = {
     moneyGoal: number,
     budget: number, 
     day: number,
-    foodSort: string
+    foodSort: foodSort
 }
+
+type foodSort = "unitWeight" | "bought" | "unitPrice" | "totalWeight"
 
 export class Calculator extends Component<CalculatorProps, CalculatorState> {
     constructor(props: CalculatorProps) {
         super(props);
-        this.state = {moneyGoal: 0, budget: this.props.budget, day: this.props.day, foodSort: "weight"}
+        this.state = {moneyGoal: 0, budget: this.props.budget, day: this.props.day, foodSort: "unitPrice"}
     }
     
     componentDidUpdate(prevProps: CalculatorProps) {
@@ -49,16 +51,17 @@ export class Calculator extends Component<CalculatorProps, CalculatorState> {
             <div>
                 <h1>Welcome to the food calculator!</h1>
                 {this.renderPersonalInfo()}
-                {this.renderFoods(totalCost)}
+                {this.renderMeats(totalCost)}
                 {this.renderSummary(totalCost, totalLbs)}
             </div>
         )
     }
 
     renderSummary = (totalCost: number, totalLbs: number): JSX.Element => {
-        const dailyCost = absMoney(round(totalCost / this.state.day, 2))
         const totalSurplus = absMoney(round(this.state.budget * this.state.day - totalCost, 2))
-        const daillySurplus = absMoney(round(this.state.budget - totalCost / this.state.day, 2))
+
+        const dailyCost = absMoney(divideByZero(round(totalCost / this.state.day, 2)))
+        const daillySurplus = absMoney(divideByZero(round(this.state.budget - totalCost / this.state.day, 2)))
 
         return (
             <div>
@@ -66,28 +69,24 @@ export class Calculator extends Component<CalculatorProps, CalculatorState> {
                     <table>
                         <tbody>
                             <tr>
-                                <th>Total Cost:</th>
-                                <th>{absMoney(round(totalCost, 2))}</th>
+                                <th></th>
+                                <th>-----TOTAL-----</th>
+                                <th>-----DAILY-----</th>
                             </tr>
                             <tr>
-                                <th>Daily Cost:</th>
+                                <th>Cost:</th>
+                                <th>{absMoney(round(totalCost, 2))}</th>
                                 <th>{dailyCost}</th>
                             </tr>
                             <tr>
-                                <th>Total Surplus:</th>
+                                <th>Surplus:</th>
                                 <th>{totalSurplus}</th>
-                            </tr>
-                            <tr>
-                                <th>Daily Surplus:</th>
                                 <th>{daillySurplus}</th>
                             </tr>
                             <tr>
-                                <th>Total LBS:</th>
+                                <th>LBS:</th>
                                 <th>{round(totalLbs, 2)} LBS</th>
-                            </tr>
-                            <tr>
-                                <th>Daily LBS:</th>
-                                <th>{round(totalLbs / this.state.day, 2)} LBS</th>
+                                <th>{divideByZero(round(totalLbs / this.state.day, 2))} LBS</th>
                             </tr>
                         </tbody>
                     </table>
@@ -110,20 +109,23 @@ export class Calculator extends Component<CalculatorProps, CalculatorState> {
     }
 
     // TODO: Add in "miscellanous" and separate current table into TABLE OF MEATS
-    renderFoods = (totalCost: number): JSX.Element => {
+    renderMeats = (totalCost: number): JSX.Element => {
         const foods: JSX.Element[] = [];
 
-        const sort: string = this.state.foodSort;
+        const sort: foodSort = this.state.foodSort;
         if (sort === "bought") {
             this.props.foods.sort((a, b) => b.bought - a.bought);
-        } else if (sort === "weight") {
-            this.props.foods.sort((a, b) => b.lbsBought - a.lbsBought);
+        } else if (sort === "unitWeight") {
+            this.props.foods.sort((a, b) => (b.lbsBought) - (a.lbsBought));
+        } else if (sort === "totalWeight") {
+            this.props.foods.sort((a, b) => (b.lbsBought * b.bought) - (a.lbsBought * a.bought));
         } else {
             this.props.foods.sort((a, b) => b.cost - a.cost);
         }
 
         for (const currFood of this.props.foods) {
             if (currFood.list === "Calculator") {
+                const percentCost = divideByZero(round(100 * currFood.lbsBought * currFood.bought * currFood.cost / totalCost, 2));
                 foods.push(
                     <tr key={currFood.name}>
                         {/** Delete item */}
@@ -131,7 +133,7 @@ export class Calculator extends Component<CalculatorProps, CalculatorState> {
 
                         {/** Change input */}
                         <td>
-                            <input type="number" id={currFood.name + " Input"} defaultValue={currFood.bought} name="input" min="0" max="1000" onChange={() => this.doBoughtChange(currFood)}/>
+                            <input type="number" id={currFood.name + " Input"} defaultValue={currFood.bought} name="input" min="0" onChange={() => this.doBoughtChange(currFood)}/>
                         </td>
 
                         {/** Name */}
@@ -144,7 +146,7 @@ export class Calculator extends Component<CalculatorProps, CalculatorState> {
                         <td>{currFood.lbsBought} {currFood.metric}</td>
 
                         {/** % Cost */}
-                        <td>{round(100 * currFood.lbsBought * currFood.bought * currFood.cost / totalCost, 2)}</td>
+                        <td>{percentCost}</td>
 
                         {/** Total pounds bought */}
                         <td>{currFood.lbsBought * currFood.bought}</td>
@@ -160,14 +162,15 @@ export class Calculator extends Component<CalculatorProps, CalculatorState> {
         } else {
             return (
                 <div>
-                    <h2>Table of Foods</h2>
+                    <h2>Table of Meats</h2>
 
                     <div>
                         <label htmlFor="sort">Sort Food By:</label>
                         <select value={this.state.foodSort} id="sort" onChange={this.doSortChange}>
-                            <option value="bought">Bought</option>
-                            <option value="weight">Weight</option>
                             <option value="unitPrice">Unit Price</option>
+                            <option value="bought">Bought</option>
+                            <option value="unitWeight">Unit Weight</option>
+                            <option value="totalWeight">Total Weight</option>
                         </select>
                     </div>
 
@@ -185,7 +188,7 @@ export class Calculator extends Component<CalculatorProps, CalculatorState> {
                             {foods}
                         </tbody>
                     </table>
-                    <button type="button" onClick={this.doAddClick}>Add New Food</button>
+                    <button type="button" onClick={this.doAddClick}>Add New Meat</button>
                     <button type="button" onClick={this.doCheckPropsClick}>Check Props</button>
                 </div>
             )
@@ -194,7 +197,7 @@ export class Calculator extends Component<CalculatorProps, CalculatorState> {
     }
 
     doAddClick = (): void => {
-        this.props.onAddFoodPage();
+        this.props.onAddMeatPage();
     }
 
     doDeleteClick = (evt: MouseEvent<HTMLAnchorElement>, currFood: Food): void => {
@@ -223,10 +226,12 @@ export class Calculator extends Component<CalculatorProps, CalculatorState> {
 
     doSortChange = (evt: ChangeEvent<HTMLSelectElement>): void => {
         const sort: string = evt.target.value;
-        if (sort === "weight") {
-            this.setState({foodSort: "weight"})
+        if (sort === "unitWeight") {
+            this.setState({foodSort: "unitWeight"})
         } else if (sort === "bought") {
             this.setState({foodSort: "bought"})
+        } else if (sort === "totalWeight") {
+            this.setState({foodSort: "totalWeight"})
         } else {
             this.setState({foodSort: "unitPrice"})
         }
@@ -260,5 +265,13 @@ const absMoney = (money: number): string => {
         return  "-$" + Math.abs(money)
     } else {
         return "$" + money
+    }
+}
+
+const divideByZero = (outcome: number): number => {
+    if (isNaN(outcome) || !isFinite(outcome)) {
+        return 0;
+    } else {
+        return outcome
     }
 }

@@ -12,13 +12,19 @@
  * git push origin main
  */
 
+/**
+ * TO UPDATE ONLNINE:
+ * scp -r ~/Desktop/iNarc/client/iNarc gabsison@attu.cs.washington.edu:/cse/web/homes/gabsison/
+ * DELETE "/" before main.blahblah
+ */
+
 import React, { Component } from "react";
 import { Food } from "./Food";
 import { Calculator } from "./Calculator";
-import { deleteFood, listFoods, saveFood, getDay, updateDay, updateBudget, getBudget} from "./server";
-import { NewFood } from "./NewFood";
+import { deleteFood, listFoods, saveFood, getDay, updateDay, updateBudget, getBudget} from "./serverDUMMY";
+import { NewMeat } from "./NewMeat";
 
-type Page = "Inventory" | "Calculator" | "New Food"
+type Page = "Calculator" | "New Meat"
 type AppState = {
     page: Page, foodList: Array<Food>, day: number, budget: number
 }
@@ -47,16 +53,14 @@ export class App extends Component<{}, AppState> {
                                 onDayChange={this.doDayChange}
                                 budget={this.state.budget}
                                 onBudgetChange={this.doBudgetChange}
-                                onAddFoodPage={this.doAddFoodPageChange}/>
-        } else if (this.state.page === "Inventory") {
-            return <div>Trying to go to inventory</div>
+                                onAddMeatPage={this.doAddMoogPageChange}/>
         } else {
-            return <NewFood onAddClick={this.doAddClick}></NewFood>
+            return <NewMeat onAddClick={this.doAddClick}></NewMeat>
         }
     };
 
-    doAddFoodPageChange = (): void => {
-        this.setState({page: "New Food"});
+    doAddMoogPageChange = (): void => {
+        this.setState({page: "New Meat"});
     }
 
     doListResp = (foods: Food[]): void => {
