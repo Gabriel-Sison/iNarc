@@ -62,6 +62,18 @@ map.set("80/20 Ground Beef", {
   bought: 0,
   servings: 1
 })
+map.set("Beef Ribeye", {
+  name: "Beef Ribeye",
+  metric: "LB",
+  cost: 10.99,
+  lbsBought: 12,
+  fats: 0,
+  carbs: 0,
+  proteins: 0,
+  list: "Calculator",
+  bought: 0,
+  servings: 1
+})
 export type ListCallback = (foods: Food[]) => void;
 export const listFoods = (cb: ListCallback): void => {
   const names: string[] = Array.from(map.keys());

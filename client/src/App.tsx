@@ -14,6 +14,7 @@
 
 /**
  * TO UPDATE ONLNINE:
+ * npm run build
  * scp -r ~/Desktop/iNarc/client/iNarc gabsison@attu.cs.washington.edu:/cse/web/homes/gabsison/
  * DELETE "/" before main.blahblah
  */

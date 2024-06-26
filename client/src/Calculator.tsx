@@ -12,8 +12,9 @@ type CalculatorProps = {
     foods: Food[]
 }
 
+const DEBUG = false;
+
 type CalculatorState = {
-    moneyGoal: number,
     budget: number, 
     day: number,
     foodSort: foodSort
@@ -24,7 +25,7 @@ type foodSort = "unitWeight" | "bought" | "unitPrice" | "totalWeight"
 export class Calculator extends Component<CalculatorProps, CalculatorState> {
     constructor(props: CalculatorProps) {
         super(props);
-        this.state = {moneyGoal: 0, budget: this.props.budget, day: this.props.day, foodSort: "unitPrice"}
+        this.state = {budget: this.props.budget, day: this.props.day, foodSort: "unitPrice"}
     }
     
     componentDidUpdate(prevProps: CalculatorProps) {
@@ -133,7 +134,7 @@ export class Calculator extends Component<CalculatorProps, CalculatorState> {
 
                         {/** Change input */}
                         <td>
-                            <input type="number" id={currFood.name + " Input"} defaultValue={currFood.bought} name="input" min="0" onChange={() => this.doBoughtChange(currFood)}/>
+                            <input type="number" id={currFood.name + " Input"} value={currFood.bought} min="0" onChange={() => this.doBoughtChange(currFood)}/>
                         </td>
 
                         {/** Name */}
@@ -189,7 +190,8 @@ export class Calculator extends Component<CalculatorProps, CalculatorState> {
                         </tbody>
                     </table>
                     <button type="button" onClick={this.doAddClick}>Add New Meat</button>
-                    <button type="button" onClick={this.doCheckPropsClick}>Check Props</button>
+                    {DEBUG && (<button type="button" onClick={this.doCheckPropsClick}>Check Props</button>)}
+                    
                 </div>
             )
         }

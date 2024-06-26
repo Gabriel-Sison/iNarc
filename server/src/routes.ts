@@ -19,6 +19,78 @@ type Food = {
 }
 
 const map: Map<string, Food> = new Map();
+map.set("Beef Chuck", {
+  name: "Beef Chuck",
+  metric: "LB",
+  cost: 4.99,
+  lbsBought: 14,
+  fats: 0,
+  carbs: 0,
+  proteins: 0,
+  list: "Calculator",
+  bought: 1,
+  servings: 1
+})
+map.set("Beef Skirt", {
+  name: "Beef Skirt",
+  metric: "LB",
+  cost: 4.49,
+  lbsBought: 2,
+  fats: 0,
+  carbs: 0,
+  proteins: 0,
+  list: "Calculator",
+  bought: 1,
+  servings: 1
+})
+map.set("Beef Short Ribs", {
+  name: "Beef Short Ribs",
+  metric: "LB",
+  cost: 8.99,
+  lbsBought: 4,
+  fats: 0,
+  carbs: 0,
+  proteins: 0,
+  list: "Calculator",
+  bought: 1,
+  servings: 1
+})
+map.set("Lamb Shoulder", {
+  name: "Lamb Shoulder",
+  metric: "LB",
+  cost: 3.69,
+  lbsBought: 8,
+  fats: 0,
+  carbs: 0,
+  proteins: 0,
+  list: "Calculator",
+  bought: 1,
+  servings: 1
+})
+map.set("80/20 Ground Beef", {
+  name: "80/20 Ground Beef",
+  metric: "LB",
+  cost: 3.19,
+  lbsBought: 10,
+  fats: 0,
+  carbs: 0,
+  proteins: 0,
+  list: "Calculator",
+  bought: 1,
+  servings: 1
+})
+map.set("Beef Ribeye", {
+  name: "Beef Ribeye",
+  metric: "LB",
+  cost: 10.99,
+  lbsBought: 12,
+  fats: 0,
+  carbs: 0,
+  proteins: 0,
+  list: "Calculator",
+  bought: 0,
+  servings: 1
+})
 
 // GENERAL CHANGE METHOD
 export const deleteFood = (req: SafeRequest, res: SafeResponse): void => { 
