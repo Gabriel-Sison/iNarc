@@ -3,6 +3,7 @@ import { Food } from './Food';
 
 type NewMeatProps = {
     onAddClick: (food: Food) => void,
+    onBackClick: () => void
 }
 
 type NewMeatState = {
@@ -70,6 +71,7 @@ export class NewMeat extends Component<NewMeatProps, NewMeatState> {
 
                     <div>
                         <button onClick={this.doAddClick} type="button">ADD</button>
+                        <button onClick={this.props.onBackClick} type="button">BACK</button>
                     </div>
                 </div>
                 {this.state.error}

@@ -22,7 +22,7 @@
 import React, { Component } from "react";
 import { Food } from "./Food";
 import { Calculator } from "./Calculator";
-import { deleteFood, listFoods, saveFood, getDay, updateDay, updateBudget, getBudget} from "./serverDUMMY";
+import { deleteFood, listFoods, saveFood, getDay, updateDay, updateBudget, getBudget} from "./server";
 import { NewMeat } from "./NewMeat";
 
 type Page = "Calculator" | "New Meat"
@@ -54,15 +54,12 @@ export class App extends Component<{}, AppState> {
                                 onDayChange={this.doDayChange}
                                 budget={this.state.budget}
                                 onBudgetChange={this.doBudgetChange}
-                                onAddMeatPage={this.doAddMoogPageChange}/>
+                                onAddMeatPage={this.doAddFoodPageChange}/>
         } else {
-            return <NewMeat onAddClick={this.doAddClick}></NewMeat>
+            return <NewMeat onAddClick={this.doAddClick}
+                            onBackClick={this.doCalculatorPageChange}/>
         }
     };
-
-    doAddMoogPageChange = (): void => {
-        this.setState({page: "New Meat"});
-    }
 
     doListResp = (foods: Food[]): void => {
         this.setState({foodList: foods})
@@ -95,5 +92,13 @@ export class App extends Component<{}, AppState> {
 
     doGetBudgetResp = (serverBudget: number): void => {
         this.setState({budget: serverBudget})
+    }
+
+    doCalculatorPageChange = (): void => {
+        this.setState({page: "Calculator"})
+    }
+
+    doAddFoodPageChange = (): void => {
+        this.setState({page: "New Meat"});
     }
 }

@@ -24,11 +24,11 @@ map.set("Beef Chuck", {
   metric: "LB",
   cost: 4.99,
   lbsBought: 14,
-  fats: 0,
+  fats: 30.9,
   carbs: 0,
-  proteins: 0,
+  proteins: 149.3,
   list: "Calculator",
-  bought: 1,
+  bought: 0,
   servings: 1
 })
 map.set("Beef Skirt", {
@@ -36,11 +36,11 @@ map.set("Beef Skirt", {
   metric: "LB",
   cost: 4.49,
   lbsBought: 2,
-  fats: 0,
+  fats: 64,
   carbs: 0,
-  proteins: 0,
+  proteins: 112,
   list: "Calculator",
-  bought: 1,
+  bought: 0,
   servings: 1
 })
 map.set("Beef Short Ribs", {
@@ -48,11 +48,11 @@ map.set("Beef Short Ribs", {
   metric: "LB",
   cost: 8.99,
   lbsBought: 4,
-  fats: 0,
+  fats: 101.3,
   carbs: 0,
-  proteins: 0,
+  proteins: 117.3,
   list: "Calculator",
-  bought: 1,
+  bought: 0,
   servings: 1
 })
 map.set("Lamb Shoulder", {
@@ -60,11 +60,11 @@ map.set("Lamb Shoulder", {
   metric: "LB",
   cost: 3.69,
   lbsBought: 8,
-  fats: 0,
+  fats: 24,
   carbs: 0,
-  proteins: 0,
+  proteins: 91.2,
   list: "Calculator",
-  bought: 1,
+  bought: 0,
   servings: 1
 })
 map.set("80/20 Ground Beef", {
@@ -72,11 +72,11 @@ map.set("80/20 Ground Beef", {
   metric: "LB",
   cost: 3.19,
   lbsBought: 10,
-  fats: 0,
+  fats: 88,
   carbs: 0,
-  proteins: 0,
+  proteins: 19 * 4,
   list: "Calculator",
-  bought: 1,
+  bought: 0,
   servings: 1
 })
 map.set("Beef Ribeye", {
@@ -84,9 +84,9 @@ map.set("Beef Ribeye", {
   metric: "LB",
   cost: 10.99,
   lbsBought: 12,
-  fats: 0,
+  fats: 85.3,
   carbs: 0,
-  proteins: 0,
+  proteins: 112,
   list: "Calculator",
   bought: 0,
   servings: 1

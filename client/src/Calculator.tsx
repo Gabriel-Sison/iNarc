@@ -127,6 +127,10 @@ export class Calculator extends Component<CalculatorProps, CalculatorState> {
         for (const currFood of this.props.foods) {
             if (currFood.list === "Calculator") {
                 const percentCost = divideByZero(round(100 * currFood.lbsBought * currFood.bought * currFood.cost / totalCost, 2));
+                const avgCals = round(divideByZero(currFood.bought * currFood.lbsBought / this.state.day * (currFood.fats * 9 + currFood.proteins * 4 + currFood.carbs * 4)),2)
+                const avgProtein = round(divideByZero(currFood.bought * currFood.lbsBought / this.state.day * currFood.proteins),2)
+                const avgFats = round(divideByZero(currFood.bought * currFood.lbsBought / this.state.day * currFood.fats),2)
+
                 foods.push(
                     <tr key={currFood.name}>
                         {/** Delete item */}
@@ -141,7 +145,7 @@ export class Calculator extends Component<CalculatorProps, CalculatorState> {
                         <td>{currFood.name}</td> 
 
                         {/** Cost per lb */}
-                        <td>{Math.round(1000 * currFood.cost) / 1000}</td>
+                        <td>${Math.round(1000 * currFood.cost) / 1000}</td>
 
                         {/** Weight*/}
                         <td>{currFood.lbsBought} {currFood.metric}</td>
@@ -151,6 +155,15 @@ export class Calculator extends Component<CalculatorProps, CalculatorState> {
 
                         {/** Total pounds bought */}
                         <td>{currFood.lbsBought * currFood.bought}</td>
+
+                        {/** Average Calories */}
+                        <td>{avgCals}</td>
+
+                        {/** Average Protein */}
+                        <td>{avgProtein}</td>
+                    
+                        {/** Average Fats */}
+                        <td>{avgFats}</td>
                     </tr>
                 )
             }
@@ -179,12 +192,15 @@ export class Calculator extends Component<CalculatorProps, CalculatorState> {
                         <tbody>
                             <tr>
                                 <th></th>
-                                <th>Bought-</th>
-                                <th>Name-----------</th> 
+                                <th>Bought</th>
+                                <th>Name</th> 
                                 <th>Cost/lb---</th>
                                 <th>Weight----</th>
-                                <th>% Cost----</th>
-                                <th>LBS Bought---</th>
+                                <th>%Cost----</th>
+                                <th>LBS ------</th>
+                                <th>Calories--</th>
+                                <th>Proteins (g)--</th>
+                                <th>Fats (g)--</th>
                             </tr>
                             {foods}
                         </tbody>
